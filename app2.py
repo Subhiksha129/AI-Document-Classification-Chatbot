@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import gdown
 
 from pypdf import PdfReader
 from pathlib import Path
@@ -194,8 +195,29 @@ create_database()
 
 # ---------------- LOAD CLASSIFICATION MODELS ----------------
 @st.cache_resource
-
 def load_models():
+
+    MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+    model_files = [
+        "tfidf_vectorizer_improved.pkl",
+        "main_category_model_improved.pkl",
+        "main_label_encoder_improved.pkl",
+        "detail_category_model_improved.pkl",
+        "detail_label_encoder_improved.pkl"
+    ]
+
+    if not all((MODEL_DIR / file).exists() for file in model_files):
+
+        st.info("Downloading machine learning models...")
+
+        gdown.download_folder(
+            url="https://drive.google.com/drive/folders/1K4IsWjpKblcuPX_I89a2J5p62ysLc8rU",
+            output=str(MODEL_DIR),
+            quiet=False,
+            use_cookies=False
+        )
+
     vectorizer = joblib.load(MODEL_DIR / "tfidf_vectorizer_improved.pkl")
     main_model = joblib.load(MODEL_DIR / "main_category_model_improved.pkl")
     main_encoder = joblib.load(MODEL_DIR / "main_label_encoder_improved.pkl")
@@ -203,7 +225,6 @@ def load_models():
     detail_encoder = joblib.load(MODEL_DIR / "detail_label_encoder_improved.pkl")
 
     return vectorizer, main_model, main_encoder, detail_model, detail_encoder
-
 
 # ---------------- PDF EXTRACTION ----------------
 def extract_pdf_text(pdf_file):
