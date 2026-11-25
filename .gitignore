@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+dataset/
+chrom_db/
+chroma_db/
+*.db
+*.sqlite3
