@@ -13,7 +13,8 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from io import BytesIO
 
-from langchain_ollama import OllamaEmbeddings, ChatOllama
+from langchain_groq import ChatGroq
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
@@ -426,8 +427,17 @@ def classify_academic_document(text):
 # ---------------- CHATBOT MODELS ----------------
 @st.cache_resource
 def load_chatbot_models():
-    embeddings = OllamaEmbeddings(model="nomic-embed-text")
-    llm = ChatOllama(model="llama3.2:1b", temperature=0)
+
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+
+    llm = ChatGroq(
+        model="llama-3.1-8b-instant",
+        temperature=0,
+        groq_api_key=st.secrets["GROQ_API_KEY"]
+    )
+
     return embeddings, llm
 
 
