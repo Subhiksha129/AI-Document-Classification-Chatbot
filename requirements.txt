@@ -13,3 +13,6 @@ chromadb
 docx2txt
 reportlab
 matplotlib
+langchain-groq
+langchain-huggingface
+sentence-transformers
